@@ -1,0 +1,599 @@
+'use client';
+import React, { useState, useEffect, useRef } from 'react';
+
+// --- COMPONENTE DE ANIMACIÓN "FADE-IN" ---
+function FadeIn({ children }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const domRef = useRef();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(domRef.current);
+        }
+      });
+    });
+
+    const { current } = domRef;
+    if (current) {
+      observer.observe(current);
+    }
+
+    return () => {
+      if (current) {
+        observer.unobserve(current);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={domRef}
+      className={`transition-all duration-1000 ease-in-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
+// --- COMPONENTE BOTÓN VOLVER ARRIBA ---
+const ScrollToTopButton = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => {
+    if (window.scrollY > 300) setIsVisible(true);
+    else setIsVisible(false);
+  };
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  useEffect(() => {
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  return (
+    <button
+      type="button"
+      onClick={scrollToTop}
+      className={`fixed bottom-20 right-6 bg-gray-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg z-50 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      aria-label="Volver arriba"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path fillRule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+      </svg>
+    </button>
+  );
+};
+
+// --- ICONOS PARA SECCIÓN "QUÉ HACEMOS" ---
+const IconEngineering = () => (
+   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707.707M12 21v-1m0-18c-4.418 0-8 3.582-8 8s3.582 8 8 8 8-3.582 8-8-3.582-8-8-8z" /></svg>
+);
+const IconIndustry = () => (
+  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h6m-6 4h6m-6 4h6" />
+  </svg>
+);
+const IconClipboard = () => (
+  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+  </svg>
+);
+const IconPLC = () => (
+  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+);
+
+// --- COMPONENTE "VALOR TIMELINE" (Basado en image_b89866.png) ---
+const ValorTimeline = () => {
+  const steps = [
+    {
+      title: "Diagnóstico",
+      text: "Visita Técnica, Levantamiento, Diagramación Conceptual y Crosschecking",
+      icon: "/images/icons/icon-diagnostico.png",
+      color: "text-cyan-400", // Color para el texto
+      isHighlighted: false // No tiene fondo azul
+    },
+    {
+      title: "Análisis Crítico",
+      text: "Estudio de Factibilidad, Costos, Presupuestos y Alcances",
+      icon: "/images/icons/icon-analisis.png",
+      color: "text-cyan-500",
+      isHighlighted: false
+    },
+    {
+      title: "Estrategia de Negocios",
+      text: "Validaciones, Aprobación de alcances, retroalimentación y planificación",
+      icon: "/images/icons/icon-estrategia.png",
+      color: "text-blue-500",
+      isHighlighted: false
+    },
+    {
+      title: "Diseño de Solución",
+      text: "Ingeniería, Desarrollo e Innovación Tecnológica",
+      icon: "/images/icons/icon-diseno.png",
+      color: "text-blue-600",
+      isHighlighted: false // <-- Este SÍ tiene fondo azul
+    },
+    {
+      title: "Implementación",
+      text: "Integración de plataformas, sistemas y pruebas de campo",
+      icon: "/images/icons/icon-implementacion.png",
+      color: "text-gray-700", // Color oscuro para el último
+      isHighlighted: false
+    },
+  ];
+
+  return (
+    // Contenedor principal del timeline
+    <div className="flex flex-col md:flex-row justify-center items-center md:items-start md:space-x-4">
+      {steps.map((step, index) => (
+        <React.Fragment key={index}>
+          {/* Contenedor de CADA paso */}
+          <div className="flex flex-col items-center text-center max-w-[200px]">
+            
+            {/* Círculo del Icono */}
+            <div 
+              className={`
+                w-32 h-32 rounded-full flex items-center justify-center mb-4
+                transition-all duration-300
+                ${step.isHighlighted ? 'bg-blue-600 shadow-lg' : 'bg-transparent'}
+              `}
+            >
+              <img 
+                src={step.icon} 
+                alt={step.title} 
+                className={`
+                  w-16 h-16
+                  ${step.isHighlighted ? 'filter brightness-0 invert' : ''}
+                `}
+                // Si el ícono es destacado (fondo azul), lo invertimos (lo hacemos blanco)
+              />
+            </div>
+            
+            {/* Texto */}
+            <h3 className={`text-xl font-bold mt-2 ${step.color}`}>{step.title}</h3>
+            <p className="text-gray-600 mt-2 text-sm">{step.text}</p>
+          </div>
+          
+          {/* Flecha de conexión (solo en escritorio) */}
+          {index < steps.length - 1 && (
+            <div className="hidden md:flex items-center pt-16">
+              <svg className={`w-12 h-12 ${steps[index + 1].color}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
+              </svg>
+            </div>
+          )}
+
+          {/* Espaciador vertical (solo en móvil) */}
+          {index < steps.length - 1 && (
+            <div className="md:hidden h-12 w-px bg-gray-300 my-4"></div>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
+
+// --- NUEVO: COMPONENTE MODAL PARA SERVICIOS ---
+function ServiceModal({ service, onClose, cacheBuster }) {
+  if (!service) return null;
+
+  // Usa cacheBuster solo si no es un placeholder
+  const serviceImgSrc = service.imageSrc.includes('placehold.co')
+    ? service.imageSrc
+    : service.imageSrc + cacheBuster;
+
+  return (
+    <div
+      // Backdrop (Fondo oscuro)
+      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+      onClick={onClose} // Cierra al hacer clic en el fondo
+    >
+      <div
+        // Contenedor del Modal
+        className="bg-white rounded-lg shadow-2xl overflow-hidden max-w-3xl w-full relative"
+        onClick={(e) => e.stopPropagation()} // Evita que el clic en el modal cierre el modal
+      >
+
+        <div className="grid grid-cols-1 md:grid-cols-2">
+
+          <div className="w-full h-64 md:h-full min-h-[300px]">
+            <img
+              src={serviceImgSrc}
+              alt={service.title}
+              className="w-full h-full object-cover"
+              onError={(e) => { e.target.src = 'https://placehold.co/600x400/e0e7ff/312e81?text=Servicio'; }}
+            />
+          </div>
+
+          <div className="p-6 md:p-8 flex flex-col">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">{service.title}</h3>
+            <p className="text-gray-700 leading-relaxed mb-6 flex-grow">{service.description}</p>
+            <button
+              onClick={onClose}
+              className="mt-auto bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition-colors duration-300 self-start">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- ********** PÁGINA DE INICIO ********** ---
+export default function HomePage() {
+
+  const [cacheBuster, setCacheBuster] = useState('');
+  useEffect(() => {
+    setCacheBuster(`?t=${new Date().getTime()}`);
+  }, []);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const heroImages = [
+    '/images/hero-1.jpg',
+    '/images/hero-2.jpg',
+    '/images/hero-3.jpg'
+  ];
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [currentIndex, heroImages.length]);
+
+  const [selectedService, setSelectedService] = useState(null);
+
+  const handleSelectService = (serviceId) => {
+    setSelectedService(serviceId);
+  };
+  const handleCloseModal = () => {
+    setSelectedService(null);
+  };
+  
+  // --- DATOS PARA LA NUEVA SECCIÓN DE SERVICIOS ---
+  const services = [
+    {
+      title: "1. Ingeniería de Procesos",
+      description: "Desarrollo de ingeniería conceptual, básica y de detalle. Diseño de plantas de proceso, dimensionamiento de equipos, cálculos hidráulicos y térmicos, diseño de P&IDs y resolución de problemas.",
+      icon: <IconEngineering />,
+      imageSrc: "/images/QueHacemos/foto1.jpg"
+    },
+    {
+      title: "2. Fabricación de Maquinaria",
+      description: "Diseño, Fabricación, Montaje y Puesta en Marcha de equipos y maquinaria industrial a la medida de tus necesidades operativas.",
+      icon: <IconIndustry />,
+      imageSrc: "/images/QueHacemos/foto2.jpg"
+    },
+    {
+      title: "3. Outsourcing de Oficina Técnica",
+      description: "Gestión Integral de Proyectos (End to End), Planimetría eléctrica, neumática e hidráulica, gestión documental y asesoría técnica experta en terreno.",
+      icon: <IconClipboard />,
+      imageSrc: "/images/QueHacemos/foto3.jpg"
+    },
+    {
+      title: "4. Automatización de Procesos",
+      description: "Levantamiento y diseño de planos, integración de tableros de control y fuerza, y programación avanzada de PLC para optimizar tus operaciones.",
+      icon: <IconPLC />,
+      imageSrc: "/images/QueHacemos/foto4.jpg"
+    }
+  ];
+
+  // Lista de clientes
+  const clients = [
+    { name: "MIRS", filename: "mirs.jpeg" },
+    { name: "Godelius", filename: "godelius.jpeg" },
+    { name: "Talleres Lucas", filename: "talleres-lucas.jpeg" },
+    { name: "RepMin", filename: "repmin.jpeg" },
+    { name: "Austin Powder", filename: "austin-powder.jpeg" },
+    { name: "Bigniss", filename: "bigniss.jpeg" },
+    { name: "Chamonate", filename: "chamonate.jpeg" },
+    { name: "Orica", filename: "orica.jpeg" }
+  ];
+  const clientList = [...clients, ...clients];
+
+  // --- DATOS para la Sección 4 (Otros Servicios) ---
+  const otherServicesData = [
+    {
+      id: 'levantamiento',
+      title: 'Levantamiento técnico en terreno',
+      imageSrc: `/images/servicios/servicio-levantamiento.jpg`,
+      description: 'Realizamos un levantamiento 3D y 2D detallado de sus instalaciones, utilizando tecnología de punta para asegurar la precisión de los datos y facilitar futuras ingenierías.'
+    },
+    {
+      id: 'filtracion',
+      title: 'Filtración de aceite Oleo hidráulico',
+      imageSrc: `/images/servicios/servicio-filtracion.jpg`,
+      description: 'Servicio especializado de microfiltrado para sistemas oleo-hidráulicos, extendiendo la vida útil de sus componentes y reduciendo costos de mantenimiento.'
+    },
+    {
+      id: 'inspeccion',
+      title: 'Inspección técnica de Equipos',
+      imageSrc: `/images/servicios/servicio-inspeccion.jpg`,
+      description: 'Inspecciones detalladas y diagnósticos de maquinaria y plantas industriales para prevenir fallas y optimizar el rendimiento operativo.'
+    },
+    {
+      id: 'montaje',
+      title: 'Montaje industrial',
+      imageSrc: `/images/servicios/servicio-montaje.jpg`,
+      description: 'Ejecutamos proyectos de montaje industrial con los más altos estándares de calidad y seguridad, asegurando una correcta puesta en marcha.'
+    },
+    {
+      id: 'tableros',
+      title: 'Integración de Tableros',
+      imageSrc: `/images/servicios/servicio-tableros.jpg`,
+      description: 'Diseño, armado e integración de tableros de control y fuerza, cumpliendo con todas las normativas eléctricas vigentes.'
+    }
+  ];
+
+
+  return (
+    <main className="bg-white">
+      <ScrollToTopButton />
+
+      {/* ===== 1. SECCIÓN HERO (CON CARRUSEL DE FONDO) ===== */}
+      <section 
+        id="inicio" 
+        className="text-white min-h-screen flex items-center relative overflow-hidden"
+      >
+        <div className="absolute inset-0 z-0">
+          {heroImages.map((src, index) => {
+            const imgSrc = cacheBuster ? src + cacheBuster : src;
+            return (
+              <img
+                key={index}
+                src={imgSrc}
+                alt={`Fondo Hero ${index + 1}`}
+                className={`
+                  absolute inset-0 w-full h-full object-cover
+                  transition-opacity duration-1000 ease-in-out
+                  ${index === currentIndex ? 'opacity-100' : 'opacity-0'}
+                `}
+              />
+            );
+          })}
+        </div>
+        
+        <div className="container mx-auto px-6 text-center py-32 md:py-48 relative z-20">
+          <FadeIn>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4">
+              Somos tu Oficina Técnica para desarrollo de proyectos de ingeniería y servicios en
+            </h1>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-blue-300 mb-8">
+              Minería y Agroindustria.
+            </h2>
+            <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
+            </p>
+            <a 
+              href="#servicios"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg text-lg transition duration-300"
+            >
+              Conoce Más
+            </a>
+          </FadeIn>
+        </div>
+      </section>
+
+      
+      {/* ===== 2. SECCIÓN "¿QUÉ HACEMOS?" ===== */}
+      <FadeIn>
+        <section id="servicios" className="py-20 md:py-24 bg-gray-100">
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
+              ¿Qué es lo que hacemos?
+            </h2>
+            <p className="text-center text-gray-600 text-lg mb-16 max-w-2xl mx-auto">
+              Desde la idea hasta la puesta en marcha, cubrimos el ciclo
+              completo de tus proyectos industriales.
+            </p>
+
+            {/* --- INICIO DEL LAYOUT --- */}
+            <div className="space-y-16">
+              {services.map((service, index) => {
+                const isEven = index % 2 === 0;
+
+                const serviceImgSrc = cacheBuster ? service.imageSrc + cacheBuster : service.imageSrc;
+
+                return (
+                  <div key={service.title} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+                    
+                    {/* Bloque de Imagen */}
+                    <div className={`w-full h-80 ${isEven ? 'md:order-1' : 'md:order-2'}`}>
+                      <img
+                        src={serviceImgSrc}
+                        alt={service.title}
+                        className="rounded-lg shadow-2xl object-cover w-full h-full"
+                        onError={(e) => { 
+                          console.error(`ERROR AL CARGAR: ${serviceImgSrc}`);
+                          e.target.src = 'https://placehold.co/600x400/e0e7ff/312e81?text=Error+al+cargar+imagen'; 
+                          e.target.alt = 'Error al cargar imagen'; 
+                        }}
+                      />
+                    </div>
+
+                    <div className={`flex flex-col justify-center ${isEven ? 'md:order-2' : 'md:order-1'}`}>
+                      <div className="flex items-center justify-center w-16 h-16 bg-red-600 rounded-lg mb-6">
+                        <div className="text-white">
+                          {service.icon}
+                        </div>
+                      </div>
+                      <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                        {service.title}
+                      </h3>
+                      <p className="text-gray-700 text-lg leading-relaxed">
+                        {service.description}
+                      </p>
+                    </div>
+
+                  </div>
+                );
+              })}
+            </div>
+            
+          </div>
+        </section>
+      </FadeIn>
+
+      {/* ===== 3. SECCIÓN "CÓMO APORTAMOS VALOR" ===== */}
+      <FadeIn>
+        <section id="propuesta-valor" className="py-20 md:py-24 bg-white overflow-hidden">
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
+              Cómo Te Aportamos Valor
+            </h2>
+            <p className="text-center text-gray-600 text-lg mb-16 max-w-3xl mx-auto">
+              "Aterrizamos estrategias e ideas de negocios a través de una
+              estructura de procesos basada en las mejores prácticas,
+              incorporando valor en todo momento."
+            </p>
+            <ValorTimeline />
+
+          </div>
+        </section>
+      </FadeIn>
+
+      {/* ===== 4. SECCIÓN "SERVICIOS" ===== */}
+      <FadeIn>
+        <section id="otros-servicios" className="py-20 md:py-24 bg-gray-100">
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-16">
+              Nuestros Servicios
+            </h2>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              
+              {otherServicesData.map((service) => {
+
+                const serviceImgSrc = service.imageSrc.includes('placehold.co')
+                  ? service.imageSrc
+                  : service.imageSrc + cacheBuster;
+
+                return (
+                  <div key={service.id} className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <img 
+                      src={serviceImgSrc}
+                      alt={service.title} 
+                      className="w-full h-48 object-cover"
+                      onError={(e) => { e.target.src = 'https://placehold.co/600x400/e0e7ff/312e81?text=Servicio'; }}
+                    />
+                    <div className="p-6 flex flex-col flex-grow">
+                      <h4 className="font-semibold text-gray-900 text-lg mb-4 flex-grow">
+                        {service.title}
+                      </h4>
+
+                      <button 
+                        onClick={() => handleSelectService(service.id)}
+                        className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition-colors duration-300"
+                      >
+                        Ver Más
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      </FadeIn>
+
+
+      {/* ===== 5. SECCIÓN CLIENTES (CARRUSEL CON IMÁGENES) ===== */}
+      <section id="clientes" className="py-20 md:py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <FadeIn>
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-16">
+              Clientes que Confían en Nosotros
+            </h2>
+          </FadeIn>
+          
+          <FadeIn>
+            <div 
+              className="w-full max-w-5xl mx-auto overflow-hidden relative"
+              style={{
+                maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+              }}
+            >
+              <div className="flex w-max animate-scroll">
+                {clientList.map((client, index) => {
+                  const logoSrc = cacheBuster ? `/images/logos/${client.filename}${cacheBuster}` : `/images/logos/${client.filename}`;
+                  return (
+                    <div key={index} className="flex-shrink-0 w-64 mx-8 flex items-center justify-center h-32">
+                      
+                      {/* --- IMAGEN DEL LOGO AQUÍ --- */}
+                      <img 
+                        src={logoSrc}
+                        alt={`Logo de ${client.name}`}
+                        className="h-20 w-auto object-contain" // h-20 para logos más grandes
+                        // Dejamos el onError aquí como fallback
+                        onError={(e) => { 
+                          console.error(`ERROR AL CARGAR: ${logoSrc}`);
+                          e.target.src = 'https://placehold.co/200x80/f1f5f9/64748b?text=Error'; 
+                          e.target.alt = 'Error al cargar logo'; 
+                        }}
+                      />
+
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ===== 6. SECCIÓN CONTACTO (SIMPLIFICADA A WHATSAPP) ===== */}
+      <section id="contacto" className="py-20 md:py-24 bg-gray-900 text-white">
+        <div className="container mx-auto px-6">
+          <FadeIn>
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-6">
+              Contacto
+            </h2>
+            <p className="text-xl text-center text-gray-300 mb-12 max-w-2xl mx-auto">
+              ¿Listo para comenzar tu próximo proyecto?
+              <br />
+              Contáctanos directamente por WhatsApp.
+            </p>
+          </FadeIn>
+
+          <FadeIn>
+            {/* Contenedor del botón */}
+            <div className="w-full max-w-2xl mx-auto text-center">
+              <a 
+                // RECUERDA cambiar el '56912345678'
+                href="https://wa.me/56962016401?text=Hola%2C%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20sus%20servicios."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-lg text-xl transition duration-300 shadow-lg"
+              >
+                {/* Icono de WhatsApp */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" className="mr-3">
+                  <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.626-2.957 6.584-6.591 6.584zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.068-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.05-.087-.182-.133-.38-.232z"/>
+                </svg>
+                Enviar Mensaje por WhatsApp
+              </a>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* --- NUEVO: Renderizado del Modal --- */}
+      {selectedService && (
+        <ServiceModal 
+          service={otherServicesData.find(s => s.id === selectedService)}
+          onClose={handleCloseModal}
+          cacheBuster={cacheBuster}
+        />
+      )}
+    </main>
+  );
+}
