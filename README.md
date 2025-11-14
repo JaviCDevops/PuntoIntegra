@@ -43,7 +43,7 @@ git clone https://[URL-DE-TU-REPOSITORIO].git
 
 Navegar a la carpeta del proyecto:
 
-cd web-puntointegra 
+cd web-puntointegra
 
 
 Instalar las dependencias:
@@ -67,33 +67,48 @@ Gestión de Imágenes
 Todas las imágenes estáticas DEBEN ir dentro de la carpeta public/. La estructura de carpetas usada en el código es la siguiente:
 
 public/
-└── images/
-    │
-    ├── hero-1.jpg              (Imágenes del carrusel principal)
-    ├── hero-2.jpg
-    ├── hero-3.jpg
-    │
-    ├── QueHacemos/
-    │   ├── foto1.jpg           (Imágenes de la sección "Qué Hacemos")
-    │   ├── foto2.jpg
-    │   ├── foto3.jpg
-    │   └── foto4.jpg
-    │
-    ├── servicios/
-    │   ├── servicio-filtracion.jpg (Imágenes para los 5 modales)
-    │   ├── servicio-inspeccion.jpg
-    │   ├── ... (etc.)
-    │
-    ├── icons/
-    │   ├── icon-diagnostico.png  (Iconos PNG para el timeline)
-    │   ├── icon-analisis.png
-    │   ├── ... (etc.)
-    │
-    └── logos/
-        ├── mirs.jpeg           (Logos de clientes)
-        ├── godelius.jpeg
-        ├── ... (etc.)
 
+images/
+
+hero-1.jpg (Imágenes del carrusel principal)
+
+hero-2.jpg
+
+hero-3.jpg
+
+QueHacemos/
+
+foto1.jpg (Imágenes de la sección "Qué Hacemos")
+
+foto2.jpg
+
+foto3.jpg
+
+foto4.jpg
+
+servicios/
+
+servicio-filtracion.jpg (Imágenes para los 5 modales)
+
+servicio-inspeccion.jpg
+
+(etc...)
+
+icons/
+
+icon-diagnostico.png (Iconos PNG para el timeline)
+
+icon-analisis.png
+
+(etc...)
+
+logos/
+
+mirs.jpeg (Logos de clientes)
+
+godelius.jpeg
+
+(etc...)
 
 Importante: Cuando llames una imagen en el código (<img>), la ruta siempre empieza desde la raíz (/), que Next.js entiende como la carpeta public.
 
