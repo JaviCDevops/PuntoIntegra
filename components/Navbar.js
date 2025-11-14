@@ -45,6 +45,7 @@ export default function Navbar() {
     { href: '#inicio', label: 'Inicio' },
     { href: '#servicios', label: 'Qué Hacemos' },
     { href: '#propuesta-valor', label: 'Propuesta de Valor' },
+    { href: '#otros-servicios', label: 'Servicios' },
     { href: '#clientes', label: 'Clientes' },
     { href: '#contacto', label: 'Contacto' },
   ];
