@@ -95,35 +95,35 @@ const ValorTimeline = () => {
     {
       title: "Diagnóstico",
       text: "Visita Técnica, Levantamiento, Diagramación Conceptual y Crosschecking",
-      icon: "/images/icons/icon-diagnostico.png",
+      icon: "/images/icons/icon-diagnostico.webp",
       color: "text-cyan-400", // Color para el texto
       isHighlighted: false // No tiene fondo azul
     },
     {
       title: "Análisis Crítico",
       text: "Estudio de Factibilidad, Costos, Presupuestos y Alcances",
-      icon: "/images/icons/icon-analisis.png",
+      icon: "/images/icons/icon-analisis.webp",
       color: "text-cyan-500",
       isHighlighted: false
     },
     {
       title: "Estrategia de Negocios",
       text: "Validaciones, Aprobación de alcances, retroalimentación y planificación",
-      icon: "/images/icons/icon-estrategia.png",
+      icon: "/images/icons/icon-estrategia.webp",
       color: "text-blue-500",
       isHighlighted: false
     },
     {
       title: "Diseño de Solución",
       text: "Ingeniería, Desarrollo e Innovación Tecnológica",
-      icon: "/images/icons/icon-diseno.png",
+      icon: "/images/icons/icon-diseno.webp",
       color: "text-blue-600",
       isHighlighted: false // <-- Este SÍ tiene fondo azul
     },
     {
       title: "Implementación",
       text: "Integración de plataformas, sistemas y pruebas de campo",
-      icon: "/images/icons/icon-implementacion.png",
+      icon: "/images/icons/icon-implementacion.webp",
       color: "text-gray-700", // Color oscuro para el último
       isHighlighted: false
     },
@@ -237,9 +237,9 @@ export default function HomePage() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const heroImages = [
-    '/images/hero-1.jpg',
-    '/images/hero-2.jpg',
-    '/images/hero-3.jpg'
+    '/images/hero-1.webp',
+    '/images/hero-2.webp',
+    '/images/hero-3.webp'
   ];
 
   useEffect(() => {
@@ -266,38 +266,38 @@ export default function HomePage() {
       title: "1. Ingeniería de Procesos",
       description: "Desarrollo de ingeniería conceptual, básica y de detalle. Diseño de plantas de proceso, dimensionamiento de equipos, cálculos hidráulicos y térmicos, diseño de P&IDs y resolución de problemas.",
       icon: <IconEngineering />,
-      imageSrc: "/images/QueHacemos/foto1.jpg"
+      imageSrc: "/images/QueHacemos/foto1.webp"
     },
     {
       title: "2. Fabricación de Maquinaria",
       description: "Diseño, Fabricación, Montaje y Puesta en Marcha de equipos y maquinaria industrial a la medida de tus necesidades operativas.",
       icon: <IconIndustry />,
-      imageSrc: "/images/QueHacemos/foto2.jpg"
+      imageSrc: "/images/QueHacemos/foto2.webp"
     },
     {
       title: "3. Outsourcing de Oficina Técnica",
       description: "Gestión Integral de Proyectos (End to End), Planimetría eléctrica, neumática e hidráulica, gestión documental y asesoría técnica experta en terreno.",
       icon: <IconClipboard />,
-      imageSrc: "/images/QueHacemos/foto3.jpg"
+      imageSrc: "/images/QueHacemos/foto3.webp"
     },
     {
       title: "4. Automatización de Procesos",
       description: "Levantamiento y diseño de planos, integración de tableros de control y fuerza, y programación avanzada de PLC para optimizar tus operaciones.",
       icon: <IconPLC />,
-      imageSrc: "/images/QueHacemos/foto4.jpg"
+      imageSrc: "/images/QueHacemos/foto4.webp"
     }
   ];
 
   // Lista de clientes
   const clients = [
-    { name: "MIRS", filename: "mirs.jpeg" },
-    { name: "Godelius", filename: "godelius.jpeg" },
-    { name: "Talleres Lucas", filename: "talleres-lucas.jpeg" },
-    { name: "RepMin", filename: "repmin.jpeg" },
-    { name: "Austin Powder", filename: "austin-powder.jpeg" },
-    { name: "Bigniss", filename: "bigniss.jpeg" },
-    { name: "Chamonate", filename: "chamonate.jpeg" },
-    { name: "Orica", filename: "orica.jpeg" }
+    { name: "MIRS", filename: "mirs.webp" },
+    { name: "Godelius", filename: "godelius.webp" },
+    { name: "Talleres Lucas", filename: "talleres-lucas.webp" },
+    { name: "RepMin", filename: "repmin.webp" },
+    { name: "Austin Powder", filename: "austin-powder.webp" },
+    { name: "Bigniss", filename: "bigniss.webp" },
+    { name: "Chamonate", filename: "chamonate.webp" },
+    { name: "Orica", filename: "orica.webp" }
   ];
   const clientList = [...clients, ...clients];
 
@@ -306,31 +306,31 @@ export default function HomePage() {
     {
       id: 'levantamiento',
       title: 'Levantamiento técnico en terreno',
-      imageSrc: `/images/servicios/servicio-levantamiento.jpg`,
+      imageSrc: `/images/servicios/servicio-levantamiento.webp`,
       description: 'Realizamos un levantamiento 3D y 2D detallado de sus instalaciones, utilizando tecnología de punta para asegurar la precisión de los datos y facilitar futuras ingenierías.'
     },
     {
       id: 'filtracion',
       title: 'Filtración de aceite Oleo hidráulico',
-      imageSrc: `/images/servicios/servicio-filtracion.jpg`,
+      imageSrc: `/images/servicios/servicio-filtracion.webp`,
       description: 'Servicio especializado de microfiltrado para sistemas oleo-hidráulicos, extendiendo la vida útil de sus componentes y reduciendo costos de mantenimiento.'
     },
     {
       id: 'inspeccion',
       title: 'Inspección técnica de Equipos',
-      imageSrc: `/images/servicios/servicio-inspeccion.jpg`,
+      imageSrc: `/images/servicios/servicio-inspeccion.webp`,
       description: 'Inspecciones detalladas y diagnósticos de maquinaria y plantas industriales para prevenir fallas y optimizar el rendimiento operativo.'
     },
     {
       id: 'montaje',
       title: 'Montaje industrial',
-      imageSrc: `/images/servicios/servicio-montaje.jpg`,
+      imageSrc: `/images/servicios/servicio-montaje.webp`,
       description: 'Ejecutamos proyectos de montaje industrial con los más altos estándares de calidad y seguridad, asegurando una correcta puesta en marcha.'
     },
     {
       id: 'tableros',
       title: 'Integración de Tableros',
-      imageSrc: `/images/servicios/servicio-tableros.jpg`,
+      imageSrc: `/images/servicios/servicio-tableros.webp`,
       description: 'Diseño, armado e integración de tableros de control y fuerza, cumpliendo con todas las normativas eléctricas vigentes.'
     }
   ];
