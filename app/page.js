@@ -345,6 +345,7 @@ export default function HomePage() {
         id="inicio" 
         className="text-white min-h-screen flex items-center relative overflow-hidden"
       >
+        {/* Contenedor del carrusel de imágenes (z-0, al fondo) */}
         <div className="absolute inset-0 z-0">
           {heroImages.map((src, index) => {
             const imgSrc = cacheBuster ? src + cacheBuster : src;
@@ -363,22 +364,23 @@ export default function HomePage() {
           })}
         </div>
         
-        <div className="container mx-auto px-6 text-center py-32 md:py-48 relative z-20">
+        <div className="absolute inset-0 bg-gray-900/60 z-10"></div>
+
+        <div className="container mx-auto px-6 text-center py-32 md:py-48 relative z-10">
           <FadeIn>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4">
-              Somos tu Oficina Técnica para desarrollo de proyectos de ingeniería y servicios en
-            </h1>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-blue-300 mb-8">
-              Minería y Agroindustria.
-            </h2>
-            <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
-            </p>
-            <a 
-              href="#servicios"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg text-lg transition duration-300"
-            >
-              Conoce Más
-            </a>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4">
+                Somos tu <span className="text-blue-400">Oficina&nbsp;Técnica</span> para desarrollo de <span className="text-gray-100">P</span>royectos de <span className="text-gray-100">I</span>ngeniería y <span className="text-gray-100">S</span>ervicios en
+              </h1>
+
+              <h1 className="text-3xl md:text-4xl lg:text-6xl font-semibold text-blue-400 mb-8">
+                Minería y Agroindustria.
+              </h1>
+              <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
+              </p>
+              <a href="#servicios" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg text-lg transition duration-300">
+                Conoce Más
+              </a>
+            
           </FadeIn>
         </div>
       </section>
@@ -392,8 +394,9 @@ export default function HomePage() {
               ¿Qué es lo que hacemos?
             </h2>
             <p className="text-center text-gray-600 text-lg mb-16 max-w-2xl mx-auto">
-              Desde la idea hasta la puesta en marcha, cubrimos el ciclo
-              completo de tus proyectos industriales.
+              Desde la idea hasta la puesta en marcha,
+              <br className="hidden md:block" />
+              cubrimos el ciclo completo de tus proyectos industriales.
             </p>
 
             {/* --- INICIO DEL LAYOUT --- */}
@@ -555,11 +558,12 @@ export default function HomePage() {
       <section id="contacto" className="py-20 md:py-24 bg-gray-900 text-white">
         <div className="container mx-auto px-6">
           <FadeIn>
+            {/* --- CORREGIDO: Título y Párrafo --- */}
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-6">
-              Contacto
+              Solicita más Información
             </h2>
             <p className="text-xl text-center text-gray-300 mb-12 max-w-2xl mx-auto">
-              ¿Listo para comenzar tu próximo proyecto?
+              ¿Listo para cotizar tu proyecto o hablar con un especialista?
               <br />
               Contáctanos directamente por WhatsApp.
             </p>
@@ -579,7 +583,7 @@ export default function HomePage() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" className="mr-3">
                   <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.626-2.957 6.584-6.591 6.584zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.068-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.05-.087-.182-.133-.38-.232z"/>
                 </svg>
-                Enviar Mensaje por WhatsApp
+                Hablar con un especialista
               </a>
             </div>
           </FadeIn>
