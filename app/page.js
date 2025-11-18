@@ -89,15 +89,15 @@ const IconPLC = () => (
   </svg>
 );
 
-// --- COMPONENTE "VALOR TIMELINE" (Basado en image_b89866.png) ---
+// --- COMPONENTE "TIMELINE" ---
 const ValorTimeline = () => {
   const steps = [
     {
       title: "Diagnóstico",
       text: "Visita Técnica, Levantamiento, Diagramación Conceptual y Crosschecking",
       icon: "/images/icons/icon-diagnostico.webp",
-      color: "text-cyan-400", // Color para el texto
-      isHighlighted: false // No tiene fondo azul
+      color: "text-cyan-400",
+      isHighlighted: false
     },
     {
       title: "Análisis Crítico",
@@ -118,13 +118,13 @@ const ValorTimeline = () => {
       text: "Ingeniería, Desarrollo e Innovación Tecnológica",
       icon: "/images/icons/icon-diseno.webp",
       color: "text-blue-600",
-      isHighlighted: false // <-- Este SÍ tiene fondo azul
+      isHighlighted: false
     },
     {
       title: "Implementación",
       text: "Integración de plataformas, sistemas y pruebas de campo",
       icon: "/images/icons/icon-implementacion.webp",
-      color: "text-gray-700", // Color oscuro para el último
+      color: "text-gray-700",
       isHighlighted: false
     },
   ];
@@ -180,44 +180,150 @@ const ValorTimeline = () => {
   );
 };
 
+// --- NUEVO COMPONENTE: TARJETA DE SERVICIO CON CARRUSEL ---
+function ServiceCard({ service, onSelect, cacheBuster }) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const nextImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev + 1) % service.images.length);
+  };
+
+  const prevImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev - 1 + service.images.length) % service.images.length);
+  };
+
+  const currentSrc = service.images[currentImageIndex].includes('placehold.co')
+      ? service.images[currentImageIndex]
+      : service.images[currentImageIndex] + cacheBuster;
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative group">
+      {/* Área de la imagen con carrusel */}
+      <div className="relative w-full h-48 bg-gray-200">
+         <img 
+            src={currentSrc}
+            alt={service.title} 
+            className="w-full h-full object-cover transition-opacity duration-500"
+            onError={(e) => { e.target.src = 'https://placehold.co/600x400/e0e7ff/312e81?text=Servicio'; }}
+         />
+         
+         {/* Flechas de navegación (solo si hay más de 1 imagen) */}
+         {service.images.length > 1 && (
+           <>
+             <button 
+               onClick={prevImage}
+               className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+               aria-label="Imagen anterior"
+             >
+               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+             </button>
+             <button 
+               onClick={nextImage}
+               className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+               aria-label="Siguiente imagen"
+             >
+               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+             </button>
+             
+             {/* Indicadores (puntos) */}
+             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1">
+                {service.images.map((_, idx) => (
+                  <div key={idx} className={`w-2 h-2 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-white/50'}`} />
+                ))}
+             </div>
+           </>
+         )}
+      </div>
+
+      <div className="p-6 flex flex-col flex-grow">
+        <h4 className="font-semibold text-gray-900 text-lg mb-4 flex-grow">
+          {service.title}
+        </h4>
+        <button 
+          onClick={() => onSelect(service.id)}
+          className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition-colors duration-300"
+        >
+          Ver Más
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // --- NUEVO: COMPONENTE MODAL PARA SERVICIOS ---
 function ServiceModal({ service, onClose, cacheBuster }) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   if (!service) return null;
 
-  // Usa cacheBuster solo si no es un placeholder
-  const serviceImgSrc = service.imageSrc.includes('placehold.co')
-    ? service.imageSrc
-    : service.imageSrc + cacheBuster;
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % service.images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + service.images.length) % service.images.length);
+  };
+
+  const currentSrc = service.images[currentImageIndex].includes('placehold.co')
+    ? service.images[currentImageIndex]
+    : service.images[currentImageIndex] + cacheBuster;
 
   return (
     <div
-      // Backdrop (Fondo oscuro)
       className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
-      onClick={onClose} // Cierra al hacer clic en el fondo
+      onClick={onClose}
     >
       <div
-        // Contenedor del Modal
         className="bg-white rounded-lg shadow-2xl overflow-hidden max-w-3xl w-full relative"
-        onClick={(e) => e.stopPropagation()} // Evita que el clic en el modal cierre el modal
+        onClick={(e) => e.stopPropagation()}
       >
 
         <div className="grid grid-cols-1 md:grid-cols-2">
-
-          <div className="w-full h-64 md:h-full min-h-[300px]">
+          {/* Columna de Imagen en el Modal (con carrusel) */}
+          <div className="w-full h-64 md:h-full min-h-[300px] relative bg-gray-100">
             <img
-              src={serviceImgSrc}
+              src={currentSrc}
               alt={service.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-opacity duration-300"
               onError={(e) => { e.target.src = 'https://placehold.co/600x400/e0e7ff/312e81?text=Servicio'; }}
             />
+            
+            {/* Flechas de navegación en el modal */}
+            {service.images.length > 1 && (
+               <>
+                 <button 
+                   onClick={prevImage}
+                   className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-full transition-colors"
+                 >
+                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                 </button>
+                 <button 
+                   onClick={nextImage}
+                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-full transition-colors"
+                 >
+                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                 </button>
+                 {/* Indicadores */}
+                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                    {service.images.map((_, idx) => (
+                      <div key={idx} className={`w-2 h-2 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-white/50'}`} />
+                    ))}
+                 </div>
+               </>
+            )}
           </div>
-
-          <div className="p-6 md:p-8 flex flex-col">
+          
+          <div className="p-6 md:p-8 flex flex-col overflow-y-auto max-h-[80vh] md:max-h-full">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">{service.title}</h3>
-            <p className="text-gray-700 leading-relaxed mb-6 flex-grow">{service.description}</p>
+            <div className="text-gray-700 leading-relaxed mb-6 flex-grow text-sm md:text-base">
+              {service.description}
+            </div>
             <button
               onClick={onClose}
-              className="mt-auto bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition-colors duration-300 self-start">
+              className="mt-auto bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition-colors duration-300 self-start"
+            >
               Cerrar
             </button>
           </div>
@@ -261,30 +367,58 @@ export default function HomePage() {
   };
   
   // --- DATOS PARA LA NUEVA SECCIÓN DE SERVICIOS ---
-  const services = [
+const services = [
     {
       title: "1. Ingeniería de Procesos",
-      description: "Desarrollo de ingeniería conceptual, básica y de detalle. Diseño de plantas de proceso, dimensionamiento de equipos, cálculos hidráulicos y térmicos, diseño de P&IDs y resolución de problemas.",
+      description: (
+        <ul className="list-disc list-inside space-y-1">
+           <li>Ingeniería Conceptual, Básica y Detalle.</li>
+           <li>Presentamos la idea, análisis y diagnóstico.</li>
+           <li>Diseño preliminar y ruta específica.</li>
+           <li>Planos definitivos y documentación técnica.</li>
+        </ul>
+      ),
       icon: <IconEngineering />,
       imageSrc: "/images/QueHacemos/foto1.webp"
     },
     {
-      title: "2. Fabricación de Maquinaria",
-      description: "Diseño, Fabricación, Montaje y Puesta en Marcha de equipos y maquinaria industrial a la medida de tus necesidades operativas.",
-      icon: <IconIndustry />,
-      imageSrc: "/images/QueHacemos/foto2.webp"
-    },
-    {
-      title: "3. Outsourcing de Oficina Técnica",
-      description: "Gestión Integral de Proyectos (End to End), Planimetría eléctrica, neumática e hidráulica, gestión documental y asesoría técnica experta en terreno.",
+      title: "2. Outsourcing de Oficina Técnica",
+      description: (
+        <ul className="list-disc list-inside space-y-1 text-left">
+          <li><strong>Gestión Integral (End to End):</strong> Coordinamos todas las etapas.</li>
+          <li><strong>Planimetría 2D y 3D:</strong> Modelado estructural, eléctrico, neumático.</li>
+          <li><strong>Gestión Documental:</strong> Organización y trazabilidad.</li>
+          <li><strong>Asesoría en Terreno:</strong> Expertos disponibles en planta.</li>
+          <li><strong>Levantamiento:</strong> Diagnóstico y registro de instalaciones.</li>
+        </ul>
+      ),
       icon: <IconClipboard />,
       imageSrc: "/images/QueHacemos/foto3.webp"
     },
     {
-      title: "4. Automatización de Procesos",
-      description: "Levantamiento y diseño de planos, integración de tableros de control y fuerza, y programación avanzada de PLC para optimizar tus operaciones.",
+      title: "3. Automatización y Control",
+      description: (
+        <ul className="list-disc list-inside space-y-1 text-left">
+          <li><strong>Levantamiento:</strong> Análisis detallado de operaciones.</li>
+          <li><strong>Tableros de Control:</strong> Diseño y montaje eléctrico.</li>
+          <li><strong>Programación de PLC:</strong> Lógicas de control adaptadas y escalables.</li>
+        </ul>
+      ),
       icon: <IconPLC />,
-      imageSrc: "/images/QueHacemos/foto4.webp"
+      imageSrc: "/images/QueHacemos/foto4.webp" 
+    },
+    {
+      title: "4. Fabricación de Equipo Industrial",
+      description: (
+        <ul className="list-disc list-inside space-y-1 text-left">
+          <li><strong>Diseño:</strong> Soluciones personalizadas.</li>
+          <li><strong>Fabricación:</strong> Materiales de alta calidad.</li>
+          <li><strong>Montaje:</strong> Instalación segura en planta.</li>
+          <li><strong>Puesta en Marcha:</strong> Validación técnica y operativa.</li>
+        </ul>
+      ),
+      icon: <IconIndustry />,
+      imageSrc: "/images/QueHacemos/foto2.webp" 
     }
   ];
 
@@ -306,32 +440,109 @@ export default function HomePage() {
     {
       id: 'levantamiento',
       title: 'Levantamiento técnico en terreno',
-      imageSrc: `/images/servicios/servicio-levantamiento.webp`,
-      description: 'Realizamos un levantamiento 3D y 2D detallado de sus instalaciones, utilizando tecnología de punta para asegurar la precisión de los datos y facilitar futuras ingenierías.'
+      // Antes: imageSrc (string), Ahora: images (array)
+      images: [
+        `/images/servicios/levantamiento/1.webp`,
+        `/images/servicios/levantamiento/2.webp`,
+        `/images/servicios/levantamiento/3.webp`,
+        `/images/servicios/levantamiento/4.webp`, 
+      ],
+      description: (
+        <div>
+          <p className="mb-2">Realizamos el levantamiento de máquinas, equipos y plantas industriales en disciplinas <strong>neumática, hidráulica, eléctrica y estructural.</strong></p>
+          <p>Con la información obtenida definimos el <strong>concepto del requerimiento</strong> y evaluamos las siguientes etapas de ingeniería, asegurando una entrega precisa y alineada con tus necesidades.</p>
+        </div>
+      )
     },
     {
       id: 'filtracion',
       title: 'Filtración de aceite Oleo hidráulico',
-      imageSrc: `/images/servicios/servicio-filtracion.webp`,
-      description: 'Servicio especializado de microfiltrado para sistemas oleo-hidráulicos, extendiendo la vida útil de sus componentes y reduciendo costos de mantenimiento.'
+      images: [
+        `/images/servicios/microfiltrado/1.webp`,
+        `/images/servicios/microfiltrado/2.webp`,
+        `/images/servicios/microfiltrado/3.webp`,
+        `/images/servicios/microfiltrado/4.webp`,
+        `/images/servicios/microfiltrado/5.webp`,
+        `/images/servicios/microfiltrado/6.webp`,
+        
+      ],
+      description: (
+        <div>
+          <p className="mb-3">Contamos con <strong>equipos de última tecnología y calibración certificada</strong>, capaces de realizar <strong>microfiltrado oleo‑hidráulico</strong> en equipos críticos.</p>
+          <p className="font-semibold mb-2">Este servicio asegura:</p>
+          <ul className="list-disc list-inside space-y-2">
+            <li>Mayor confiabilidad en la operación de sistemas hidráulicos.</li>
+            <li>Reducción de tiempos de parada por fallas o contaminación.</li>
+            <li>Extensión de la vida útil de componentes y fluidos.</li>
+          </ul>
+        </div>
+      )
     },
     {
       id: 'inspeccion',
       title: 'Inspección técnica de Equipos',
-      imageSrc: `/images/servicios/servicio-inspeccion.webp`,
-      description: 'Inspecciones detalladas y diagnósticos de maquinaria y plantas industriales para prevenir fallas y optimizar el rendimiento operativo.'
+      images: [
+        `/images/servicios/inspeccion/1.webp`,
+        `/images/servicios/inspeccion/2.webp`,
+        `/images/servicios/inspeccion/3.webp`,
+      ],
+      description: (
+        <div>
+          <p className="mb-2">Nuestro equipo profesional realiza <strong>evaluaciones técnicas completas</strong> en fabricación, operación y conexionado eléctrico e hidráulico.</p>
+          <p>Con la información obtenida elaboramos <strong>informes precisos y personalizados</strong>, ajustados a los requerimientos de cada cliente.</p>
+        </div>
+      )
     },
     {
       id: 'montaje',
       title: 'Montaje industrial',
-      imageSrc: `/images/servicios/servicio-montaje.webp`,
-      description: 'Ejecutamos proyectos de montaje industrial con los más altos estándares de calidad y seguridad, asegurando una correcta puesta en marcha.'
+      images: [
+        `/images/servicios/montaje/1.webp`,
+        `/images/servicios/montaje/2.webp`,
+        `/images/servicios/montaje/3.webp`,
+        `/images/servicios/montaje/4.webp`,
+        `/images/servicios/montaje/5.webp`,
+        
+      ],
+      description: (
+        <div>
+          <p className="mb-3">Contamos con amplia experiencia en <strong>montaje de máquinas, plantas y robots industriales (KUKA)</strong>, abarcando aplicaciones de diversa complejidad.</p>
+          <p className="font-semibold mb-2">Nuestro campo de acción incluye:</p>
+          <ul className="list-disc list-inside space-y-2">
+            <li>Montajes oleo‑hidráulicos</li>
+            <li>Montajes eléctricos y de control</li>
+            <li>Montajes neumáticos</li>
+            <li>Integración completa de sistema</li>
+          </ul>
+        </div>
+      )
     },
     {
       id: 'tableros',
       title: 'Integración de Tableros',
-      imageSrc: `/images/servicios/servicio-tableros.webp`,
-      description: 'Diseño, armado e integración de tableros de control y fuerza, cumpliendo con todas las normativas eléctricas vigentes.'
+      images: [
+        `/images/servicios/tableros/1.webp`,
+        `/images/servicios/tableros/2.webp`,
+        `/images/servicios/tableros/3.webp`,
+        `/images/servicios/tableros/4.webp`,
+        `/images/servicios/tableros/5.webp`,
+        `/images/servicios/tableros/6.webp`,
+        `/images/servicios/tableros/7.webp`,
+        
+      ],
+      description: (
+       <div>
+          <p className="mb-3">Nuestro equipo cuenta con amplia experiencia en el <strong>diseño, fabricación e integración de tableros de baja tensión (BT), automatización y control</strong>.</p>
+          <p className="mb-2">Trabajamos junto al cliente para definir el <strong>alcance específico de cada proyecto</strong>, ofreciendo </p>
+          <p className="mb-2">Ofrecemos desde etapas parciales hasta la <strong>cadena completa</strong>, que incluye:</p>
+          <ul className="list-disc list-inside space-y-2">
+            <li>Diseño conceptual</li>
+            <li>Fabricación y montaje</li>
+            <li>Integración total de sistemas</li>
+            <li>Entrega llave en mano</li>
+          </ul>
+        </div>
+      )
     }
   ];
 
@@ -340,7 +551,7 @@ export default function HomePage() {
     <main className="bg-white">
       <ScrollToTopButton />
 
-      {/* ===== 1. SECCIÓN HERO (CON CARRUSEL DE FONDO) ===== */}
+      {/* ===== 1. SECCIÓN HERO ===== */}
       <section 
         id="inicio" 
         className="text-white min-h-screen flex items-center relative overflow-hidden"
@@ -378,7 +589,7 @@ export default function HomePage() {
               <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
               </p>
               <a href="#servicios" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg text-lg transition duration-300">
-                Conoce Más
+                EXPLORA NUESTRAS SOLUCIONES
               </a>
             
           </FadeIn>
@@ -410,7 +621,7 @@ export default function HomePage() {
                   <div key={service.title} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                     
                     {/* Bloque de Imagen */}
-                    <div className={`w-full h-80 ${isEven ? 'md:order-1' : 'md:order-2'}`}>
+                    <div className={`w-full md:h-[400px] ${isEven ? 'md:order-1' : 'md:order-2'}`}>
                       <img
                         src={serviceImgSrc}
                         alt={service.title}
@@ -473,36 +684,14 @@ export default function HomePage() {
             </h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              
-              {otherServicesData.map((service) => {
-
-                const serviceImgSrc = service.imageSrc.includes('placehold.co')
-                  ? service.imageSrc
-                  : service.imageSrc + cacheBuster;
-
-                return (
-                  <div key={service.id} className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-                    <img 
-                      src={serviceImgSrc}
-                      alt={service.title} 
-                      className="w-full h-48 object-cover"
-                      onError={(e) => { e.target.src = 'https://placehold.co/600x400/e0e7ff/312e81?text=Servicio'; }}
-                    />
-                    <div className="p-6 flex flex-col flex-grow">
-                      <h4 className="font-semibold text-gray-900 text-lg mb-4 flex-grow">
-                        {service.title}
-                      </h4>
-
-                      <button 
-                        onClick={() => handleSelectService(service.id)}
-                        className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition-colors duration-300"
-                      >
-                        Ver Más
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
+              {otherServicesData.map((service) => (
+                <ServiceCard 
+                  key={service.id} 
+                  service={service} 
+                  onSelect={handleSelectService} 
+                  cacheBuster={cacheBuster}
+                />
+              ))}
             </div>
           </div>
         </section>
