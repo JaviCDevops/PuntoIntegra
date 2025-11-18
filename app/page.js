@@ -369,13 +369,12 @@ export default function HomePage() {
   // --- DATOS PARA LA NUEVA SECCIÓN DE SERVICIOS ---
 const services = [
     {
-      title: "1. Ingeniería de Procesos",
+      title: "1. Ingeniería",
       description: (
         <ul className="list-disc list-inside space-y-1">
-           <li>Ingeniería Conceptual, Básica y Detalle.</li>
-           <li>Presentamos la idea, análisis y diagnóstico.</li>
-           <li>Diseño preliminar y ruta específica.</li>
-           <li>Planos definitivos y documentación técnica.</li>
+           <li><strong> Conceptual</strong> : Presentamos la idea o requerimiento, realizamos análisis y diagnóstico, y evaluamos la factibilidad técnica y económica.</li>
+           <li><strong> Basica</strong> : Desarrollamos el diseño preliminar con equipos, infraestructura y disciplinas necesarias, estableciendo la ruta específica de diseño tras la aprobación.</li>
+           <li><strong> Detalle</strong> : Generamos planos definitivos y documentación técnica por área y disciplina, optimizando la planificación, control y ejecución del proyecto.</li>
         </ul>
       ),
       icon: <IconEngineering />,
