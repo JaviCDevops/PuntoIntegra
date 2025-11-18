@@ -577,21 +577,21 @@ const services = [
         
         <div className="absolute inset-0 bg-gray-900/60 z-10"></div>
 
-        <div className="container mx-auto px-6 text-center py-32 md:py-48 relative z-10">
+        <div className="container mx-auto px-6 text-center py-32 md:py-48 relative z-20">
           <FadeIn>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4">
-                Somos tu <span className="text-blue-400">Oficina&nbsp;Técnica</span> para desarrollo de <span className="text-gray-100">P</span>royectos de <span className="text-gray-100">I</span>ngeniería y <span className="text-gray-100">S</span>ervicios en
-              </h1>
-
-              <h1 className="text-3xl md:text-4xl lg:text-6xl font-semibold text-blue-400 mb-8">
-                Minería y Agroindustria.
-              </h1>
-              <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
-              </p>
-              <a href="#servicios" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg text-lg transition duration-300">
-                EXPLORA NUESTRAS SOLUCIONES
-              </a>
-            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4" style={{ textShadow: '0 2px 5px rgba(0, 0, 0, 0.7)' }}>
+              Somos tu <span className="text-blue-400 font-extrabold">Oficina&nbsp;Técnica</span> para desarrollo de <span className="font-extrabold text-gray-100">P</span>royectos de <span className="font-extrabold text-gray-100">I</span>ngeniería y <span className="font-extrabold text-gray-100">S</span>ervicios en
+            </h1>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-blue-300 mb-8" style={{ textShadow: '0 2px 5px rgba(0, 0, 0, 0.7)' }}>
+              Minería y Agroindustria.
+            </h2>
+            <a 
+              href="#servicios" 
+              
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 sm:px-10 rounded-lg text-sm sm:text-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              EXPLORA NUESTRAS SOLUCIONES
+            </a>
           </FadeIn>
         </div>
       </section>
@@ -621,7 +621,7 @@ const services = [
                   <div key={service.title} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                     
                     {/* Bloque de Imagen */}
-                    <div className={`w-full md:h-[400px] ${isEven ? 'md:order-1' : 'md:order-2'}`}>
+                    <div className={`w-full h-80 md:h-[500px] ${isEven ? 'md:order-1' : 'md:order-2'}`}>
                       <img
                         src={serviceImgSrc}
                         alt={service.title}
@@ -643,9 +643,9 @@ const services = [
                       <h3 className="text-3xl font-bold text-gray-900 mb-4">
                         {service.title}
                       </h3>
-                      <p className="text-gray-700 text-lg leading-relaxed">
+                      <div className="text-gray-700 text-lg leading-relaxed">
                         {service.description}
-                      </p>
+                      </div>
                     </div>
 
                   </div>
