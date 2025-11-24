@@ -177,14 +177,9 @@ const EngineeringComparison = ({ cacheBuster }) => {
       <div className="container mx-auto px-6">
         <div className="max-w-5xl mx-auto">
           <ImageSlider 
-            beforeSrc={`/images/comparacion/plano-antiguo.jpg${cacheBuster}`}
-            afterSrc={`/images/comparacion/plano-nuevo.jpg${cacheBuster}`}
-            labelBefore="Despues"
-            labelAfter="Antes"
+            beforeSrc={`/images/comparacion/plano-antiguo.webp${cacheBuster}`}
+            afterSrc={`/images/comparacion/plano-nuevo.webp${cacheBuster}`}
           />
-          <p className="text-center text-gray-500 text-sm mt-4">
-            Prueba antes y despues.
-          </p>
         </div>
 
       </div>
@@ -684,7 +679,7 @@ const services = [
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4" style={{ textShadow: '0 2px 5px rgba(0, 0, 0, 0.7)' }}>
               Somos tu <span className="text-blue-400 font-extrabold">Oficina&nbsp;Técnica</span> para desarrollo de <span className="font-extrabold text-gray-100">P</span>royectos de <span className="font-extrabold text-gray-100">I</span>ngeniería y <span className="font-extrabold text-gray-100">S</span>ervicios en
             </h1>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-blue-300 mb-8" style={{ textShadow: '0 2px 5px rgba(0, 0, 0, 0.7)' }}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-blue-400 mb-8" style={{ textShadow: '0 2px 5px rgba(0, 0, 0, 0.7)' }}>
               Minería y Agroindustria.
             </h2>
             <a 
@@ -821,33 +816,27 @@ const services = [
               }}
             >
               <div className="flex w-max animate-scroll">
-                {clientList.map((client, index) => {
-                  const logoSrc = cacheBuster ? `/images/logos/${client.filename}${cacheBuster}` : `/images/logos/${client.filename}`;
-                  return (
-                    <div key={index} className="flex-shrink-0 w-64 mx-8 flex items-center justify-center h-32">
-                      
-                      {/* --- IMAGEN DEL LOGO AQUÍ --- */}
-                      <img 
-                        src={logoSrc}
-                        alt={`Logo de ${client.name}`}
-                        className="h-20 w-auto object-contain" // h-20 para logos más grandes
-                        // Dejamos el onError aquí como fallback
-                        onError={(e) => { 
-                          console.error(`ERROR AL CARGAR: ${logoSrc}`);
-                          e.target.src = 'https://placehold.co/200x80/f1f5f9/64748b?text=Error'; 
-                          e.target.alt = 'Error al cargar logo'; 
-                        }}
-                      />
-
+                {clientList.map((client, index) => (
+                  <div key={index} className="flex-shrink-0 w-64 mx-8 flex items-center justify-center h-40">
+                      <div className="flex flex-col items-center justify-center">
+                          <img 
+                            src={cacheBuster ? `/images/logos/${client.filename}${cacheBuster}` : `/images/logos/${client.filename}`}
+                            alt={`Logo de ${client.name}`}
+                            className="h-28 w-auto object-contain mb-2"
+                            onError={(e) => { 
+                              e.target.src = 'https://placehold.co/200x80/f1f5f9/64748b?text=Error'; 
+                            }}
+                          />
+                          <span className="text-base  text-gray-700 whitespace-nowrap font-agency">{client.name}</span>
+                      </div>
                     </div>
-                  );
-                })}
+                  )
+                )}
               </div>
             </div>
           </FadeIn>
         </div>
       </section>
-
       {/* ===== 6. SECCIÓN CONTACTO (SIMPLIFICADA A WHATSAPP) ===== */}
       <section id="contacto" className="py-20 md:py-24 bg-gray-900 text-white">
         <div className="container mx-auto px-6">
