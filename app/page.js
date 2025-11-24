@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 // --- COMPONENTE DE ANIMACIÓN "FADE-IN" ---
 function FadeIn({ children }) {
@@ -88,6 +88,109 @@ const IconPLC = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
   </svg>
 );
+
+// --- COMPONENTE DE COMPARACIÓN DE IMÁGENES (ANTES/DESPUÉS) ---
+const ImageSlider = ({ beforeSrc, afterSrc, labelBefore, labelAfter }) => {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const sliderRef = useRef(null);
+
+  const handleDrag = useCallback((e) => {
+    if (!isDragging || !sliderRef.current) return;
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    if (!clientX) return;
+
+    const rect = sliderRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const newPosition = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    setSliderPosition(newPosition);
+  }, [isDragging]);
+
+  const startDrag = useCallback(() => {
+    setIsDragging(true);
+  }, []);
+
+  const endDrag = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleDrag);
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('touchmove', handleDrag);
+      window.addEventListener('touchend', endDrag);
+    } else {
+      window.removeEventListener('mousemove', handleDrag);
+      window.removeEventListener('mouseup', endDrag);
+      window.removeEventListener('touchmove', handleDrag);
+      window.removeEventListener('touchend', endDrag);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleDrag);
+      window.removeEventListener('mouseup', endDrag);
+      window.removeEventListener('touchmove', handleDrag);
+      window.removeEventListener('touchend', endDrag);
+    };
+  }, [isDragging, handleDrag, endDrag]);
+
+  return (
+    <div className="relative w-full overflow-hidden shadow-2xl rounded-lg cursor-pointer my-8 select-none" ref={sliderRef}
+      style={{ aspectRatio: '16/9', maxHeight: '500px' }}
+      onMouseDown={startDrag}
+      onTouchStart={startDrag}
+    >
+      {/* Imagen "Antes" (La que se recorta) */}
+      <img src={beforeSrc} alt={labelBefore} className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+
+      {/* Imagen "Después" (La que se superpone) */}
+      <img src={afterSrc} alt={labelAfter} className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+      />
+
+      {/* Etiqueta "Antes" */}
+      <span className="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 text-sm rounded-lg z-10">{labelBefore}</span>
+
+      {/* Etiqueta "Después" */}
+      <span className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 text-sm rounded-lg z-10">{labelAfter}</span>
+
+      {/* Divisor/Handle (Barra de arrastre) */}
+      <div className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20"
+        style={{ left: `calc(${sliderPosition}% - 2px)` }}
+        onMouseDown={startDrag}
+        onTouchStart={startDrag}
+      >
+        {/* Círculo de arrastre */}
+        <div className="absolute top-1/2 left-1/2 w-10 h-10 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full shadow-lg border-2 border-gray-700 flex items-center justify-center">
+          <svg className="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 9l-3.293-3.293a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" /></svg>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+// --- COMPONENTE DE SECCIÓN DE COMPARACIÓN DE INGENIERÍA ---
+const EngineeringComparison = ({ cacheBuster }) => {
+  return (
+    <section className="py-12 md:py-16 " id="ingenieria-comparacion">
+      <div className="container mx-auto px-6">
+        <div className="max-w-5xl mx-auto">
+          <ImageSlider 
+            beforeSrc={`/images/comparacion/plano-antiguo.jpg${cacheBuster}`}
+            afterSrc={`/images/comparacion/plano-nuevo.jpg${cacheBuster}`}
+            labelBefore="Despues"
+            labelAfter="Antes"
+          />
+          <p className="text-center text-gray-500 text-sm mt-4">
+            Prueba antes y despues.
+          </p>
+        </div>
+
+      </div>
+    </section>
+  );
+};
 
 // --- COMPONENTE "TIMELINE" ---
 const ValorTimeline = () => {
@@ -594,7 +697,6 @@ const services = [
           </FadeIn>
         </div>
       </section>
-
       
       {/* ===== 2. SECCIÓN "¿QUÉ HACEMOS?" ===== */}
       <FadeIn>
@@ -608,6 +710,10 @@ const services = [
               <br className="hidden md:block" />
               cubrimos el ciclo completo de tus proyectos industriales.
             </p>
+
+      <FadeIn>
+        <EngineeringComparison cacheBuster={cacheBuster} />
+      </FadeIn>
 
             {/* --- INICIO DEL LAYOUT --- */}
             <div className="space-y-16">
