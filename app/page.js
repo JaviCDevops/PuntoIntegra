@@ -177,7 +177,7 @@ const EngineeringComparison = ({ cacheBuster }) => {
       <div className="container mx-auto px-6">
         <div className="max-w-5xl mx-auto">
           <ImageSlider 
-            beforeSrc={`/images/comparacion/plano-antiguo.webp${cacheBuster}`}
+            beforeSrc={`/images/comparacion/foto5.jpeg${cacheBuster}`}
             afterSrc={`/images/comparacion/plano-nuevo.webp${cacheBuster}`}
           />
         </div>
@@ -822,12 +822,12 @@ const services = [
                           <img 
                             src={cacheBuster ? `/images/logos/${client.filename}${cacheBuster}` : `/images/logos/${client.filename}`}
                             alt={`Logo de ${client.name}`}
-                            className="h-28 w-auto object-contain mb-2"
+                            className="h-30 w-auto object-contain mb-2"
                             onError={(e) => { 
                               e.target.src = 'https://placehold.co/200x80/f1f5f9/64748b?text=Error'; 
                             }}
                           />
-                          <span className="text-base  text-gray-700 whitespace-nowrap font-agency">{client.name}</span>
+                          <span className="text-xl font-extrabold text-gray-700 whitespace-nowrap font-agency">{client.name}</span>
                       </div>
                     </div>
                   )
