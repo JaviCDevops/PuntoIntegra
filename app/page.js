@@ -705,7 +705,7 @@ const services = [
             <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
               ¿Qué es lo que hacemos?
             </h2>
-            <p className="text-center text-gray-600 text-lg mb-16 max-w-2xl mx-auto">
+            <p className="text-center text-gray-600 text-lg mb-0 max-w-2xl mx-auto">
               Desde la idea hasta la puesta en marcha,
               <br className="hidden md:block" />
               cubrimos el ciclo completo de tus proyectos industriales.
