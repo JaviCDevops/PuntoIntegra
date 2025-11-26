@@ -148,12 +148,6 @@ const ImageSlider = ({ beforeSrc, afterSrc, labelBefore, labelAfter }) => {
         style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
       />
 
-      {/* Etiqueta "Antes" */}
-      <span className="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 text-sm rounded-lg z-10">{labelBefore}</span>
-
-      {/* Etiqueta "Después" */}
-      <span className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 text-sm rounded-lg z-10">{labelAfter}</span>
-
       {/* Divisor/Handle (Barra de arrastre) */}
       <div className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20"
         style={{ left: `calc(${sliderPosition}% - 2px)` }}
@@ -177,7 +171,7 @@ const EngineeringComparison = ({ cacheBuster }) => {
       <div className="container mx-auto px-6">
         <div className="max-w-5xl mx-auto">
           <ImageSlider 
-            beforeSrc={`/images/comparacion/plano-antiguo.jpeg${cacheBuster}`}
+            beforeSrc={`/images/comparacion/plano-antiguo.webp${cacheBuster}`}
             afterSrc={`/images/comparacion/plano-nuevo.webp${cacheBuster}`}
           />
         </div>
@@ -335,8 +329,8 @@ function ServiceCard({ service, onSelect, cacheBuster }) {
          )}
       </div>
 
-      <div className="p-6 flex flex-col flex-grow">
-        <h4 className="font-semibold text-gray-900 text-lg mb-4 flex-grow">
+      <div className="p-6 flex flex-col grow">
+        <h4 className="font-semibold text-gray-900 text-lg mb-4 grow">
           {service.title}
         </h4>
         <button 
@@ -415,7 +409,7 @@ function ServiceModal({ service, onClose, cacheBuster }) {
           
           <div className="p-6 md:p-8 flex flex-col overflow-y-auto max-h-[80vh] md:max-h-full">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">{service.title}</h3>
-            <div className="text-gray-700 leading-relaxed mb-6 flex-grow text-sm md:text-base">
+            <div className="text-gray-700 leading-relaxed mb-6 grow text-sm md:text-base">
               {service.description}
             </div>
             <button
@@ -817,7 +811,7 @@ const services = [
             >
               <div className="flex w-max animate-scroll">
                 {clientList.map((client, index) => (
-                  <div key={index} className="flex-shrink-0 w-64 mx-8 flex items-center justify-center h-40">
+                  <div key={index} className="shrink-0 w-64 mx-8 flex items-center justify-center h-40">
                       <div className="flex flex-col items-center justify-center">
                           <img 
                             src={cacheBuster ? `/images/logos/${client.filename}${cacheBuster}` : `/images/logos/${client.filename}`}
