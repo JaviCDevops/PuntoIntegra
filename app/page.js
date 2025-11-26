@@ -177,7 +177,7 @@ const EngineeringComparison = ({ cacheBuster }) => {
       <div className="container mx-auto px-6">
         <div className="max-w-5xl mx-auto">
           <ImageSlider 
-            beforeSrc={`/images/comparacion/foto5.jpeg${cacheBuster}`}
+            beforeSrc={`/images/comparacion/plano-antiguo.jpeg${cacheBuster}`}
             afterSrc={`/images/comparacion/plano-nuevo.webp${cacheBuster}`}
           />
         </div>
