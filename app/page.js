@@ -89,8 +89,7 @@ const IconPLC = () => (
   </svg>
 );
 
-// --- COMPONENTE DE COMPARACIÓN DE IMÁGENES (ANTES/DESPUÉS) ---
-const ImageSlider = ({ beforeSrc, afterSrc, labelBefore, labelAfter }) => {
+const ImageSlider = ({ beforeSrc, afterSrc, labelBefore, labelAfter, cacheBuster }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef(null);
@@ -134,19 +133,40 @@ const ImageSlider = ({ beforeSrc, afterSrc, labelBefore, labelAfter }) => {
     };
   }, [isDragging, handleDrag, endDrag]);
 
+  const beforeSrcFinal = cacheBuster ? beforeSrc + cacheBuster : beforeSrc;
+  const afterSrcFinal = cacheBuster ? afterSrc + cacheBuster : afterSrc;
+
   return (
-    <div className="relative w-full overflow-hidden shadow-2xl rounded-lg cursor-pointer my-8 select-none" ref={sliderRef}
-      style={{ aspectRatio: '16/9', maxHeight: '500px' }}
+    <div className="relative w-full overflow-hidden shadow-2xl rounded-lg cursor-pointer my-8 select-none" 
+      ref={sliderRef}
+      // --- CAMBIO: Eliminado aspectRatio y maxHeight. Dejamos que la imagen defina la altura ---
       onMouseDown={startDrag}
       onTouchStart={startDrag}
     >
-      {/* Imagen "Antes" (La que se recorta) */}
-      <img src={beforeSrc} alt={labelBefore} className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+      {/* Imagen "Antes" (AHORA ES RELATIVA PARA DEFINIR ALTURA) */}
+      <img 
+        src={beforeSrcFinal} 
+        alt={labelBefore} 
+        className="block w-full h-auto pointer-events-none" // 'block' y 'h-auto' permiten tamaño natural
+        draggable="false"
+      />
 
-      {/* Imagen "Después" (La que se superpone) */}
-      <img src={afterSrc} alt={labelAfter} className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+      {/* Imagen "Después" (ABSOLUTA SUPERPUESTA) */}
+      <img 
+        src={afterSrcFinal} 
+        alt={labelAfter} 
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none" 
+        draggable="false"
         style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
       />
+
+      {/* Etiquetas (Opcionales, se muestran si se pasan como props) */}
+      {labelBefore && (
+        <span className="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 text-sm rounded-lg z-10">{labelBefore}</span>
+      )}
+      {labelAfter && (
+        <span className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 text-sm rounded-lg z-10">{labelAfter}</span>
+      )}
 
       {/* Divisor/Handle (Barra de arrastre) */}
       <div className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20"
@@ -164,7 +184,7 @@ const ImageSlider = ({ beforeSrc, afterSrc, labelBefore, labelAfter }) => {
 };
 
 
-// --- COMPONENTE DE SECCIÓN DE COMPARACIÓN DE INGENIERÍA ---
+
 const EngineeringComparison = ({ cacheBuster }) => {
   return (
     <section className="py-12 md:py-16 " id="ingenieria-comparacion">
@@ -181,7 +201,6 @@ const EngineeringComparison = ({ cacheBuster }) => {
   );
 };
 
-// --- COMPONENTE "TIMELINE" ---
 const ValorTimeline = () => {
   const steps = [
     {
@@ -222,14 +241,11 @@ const ValorTimeline = () => {
   ];
 
   return (
-    // Contenedor principal del timeline
     <div className="flex flex-col md:flex-row justify-center items-center md:items-start md:space-x-4">
       {steps.map((step, index) => (
         <React.Fragment key={index}>
-          {/* Contenedor de CADA paso */}
           <div className="flex flex-col items-center text-center max-w-[200px]">
             
-            {/* Círculo del Icono */}
             <div 
               className={`
                 w-32 h-32 rounded-full flex items-center justify-center mb-4
@@ -244,7 +260,6 @@ const ValorTimeline = () => {
                   w-16 h-16
                   ${step.isHighlighted ? 'filter brightness-0 invert' : ''}
                 `}
-                // Si el ícono es destacado (fondo azul), lo invertimos (lo hacemos blanco)
               />
             </div>
             
@@ -253,7 +268,6 @@ const ValorTimeline = () => {
             <p className="text-gray-600 mt-2 text-sm">{step.text}</p>
           </div>
           
-          {/* Flecha de conexión (solo en escritorio) */}
           {index < steps.length - 1 && (
             <div className="hidden md:flex items-center pt-16">
               <svg className={`w-12 h-12 ${steps[index + 1].color}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -262,7 +276,6 @@ const ValorTimeline = () => {
             </div>
           )}
 
-          {/* Espaciador vertical (solo en móvil) */}
           {index < steps.length - 1 && (
             <div className="md:hidden h-12 w-px bg-gray-300 my-4"></div>
           )}
@@ -272,7 +285,6 @@ const ValorTimeline = () => {
   );
 };
 
-// --- NUEVO COMPONENTE: TARJETA DE SERVICIO CON CARRUSEL ---
 function ServiceCard({ service, onSelect, cacheBuster }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
@@ -292,7 +304,6 @@ function ServiceCard({ service, onSelect, cacheBuster }) {
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative group">
-      {/* Área de la imagen con carrusel */}
       <div className="relative w-full h-48 bg-gray-200">
          <img 
             src={currentSrc}
@@ -301,7 +312,6 @@ function ServiceCard({ service, onSelect, cacheBuster }) {
             onError={(e) => { e.target.src = 'https://placehold.co/600x400/e0e7ff/312e81?text=Servicio'; }}
          />
          
-         {/* Flechas de navegación (solo si hay más de 1 imagen) */}
          {service.images.length > 1 && (
            <>
              <button 
@@ -319,7 +329,6 @@ function ServiceCard({ service, onSelect, cacheBuster }) {
                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
              </button>
              
-             {/* Indicadores (puntos) */}
              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1">
                 {service.images.map((_, idx) => (
                   <div key={idx} className={`w-2 h-2 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-white/50'}`} />
@@ -344,7 +353,6 @@ function ServiceCard({ service, onSelect, cacheBuster }) {
   );
 }
 
-// --- NUEVO: COMPONENTE MODAL PARA SERVICIOS ---
 function ServiceModal({ service, onClose, cacheBuster }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -373,7 +381,6 @@ function ServiceModal({ service, onClose, cacheBuster }) {
       >
 
         <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Columna de Imagen en el Modal (con carrusel) */}
           <div className="w-full h-64 md:h-full min-h-[300px] relative bg-gray-100">
             <img
               src={currentSrc}
@@ -382,7 +389,6 @@ function ServiceModal({ service, onClose, cacheBuster }) {
               onError={(e) => { e.target.src = 'https://placehold.co/600x400/e0e7ff/312e81?text=Servicio'; }}
             />
             
-            {/* Flechas de navegación en el modal */}
             {service.images.length > 1 && (
                <>
                  <button 
@@ -397,7 +403,6 @@ function ServiceModal({ service, onClose, cacheBuster }) {
                  >
                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                  </button>
-                 {/* Indicadores */}
                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
                     {service.images.map((_, idx) => (
                       <div key={idx} className={`w-2 h-2 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-white/50'}`} />
